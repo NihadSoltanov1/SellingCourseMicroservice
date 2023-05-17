@@ -1,3 +1,4 @@
+using FreeCourses.Service.Catalog.Service;
 using FreeCourses.Service.Catalog.Settings;
 using Microsoft.Extensions.Options;
 
@@ -11,7 +12,8 @@ var configuration = new ConfigurationBuilder()
 
 // Configure the DatabaseSettings using the configuration
 builder.Services.Configure<DatabaseSettings>(configuration.GetSection("DatabaseSettings"));
-
+builder.Services.AddSingleton<ICourseService, CourseService>();
+builder.Services.AddSingleton<ICategoryService, CategoryService>();
 builder.Services.AddControllers();
 builder.Services.Configure <DatabaseSettings> (configuration.GetSection("DataseSettings"));
 builder.Services.AddSingleton<IDatabaseSettings>(sp =>

@@ -20,13 +20,13 @@ namespace FreeCourses.Service.Catalog.Service
             _mapper = mapper;
         }
 
-        public async Task<Response<List<CategoryDto>>> GetAll()
+        public async Task<Response<List<CategoryDto>>> GetAllAsync()
         {
            var categories = await _categoryCollection.Find(x => true).ToListAsync();
             return Response<CategoryDto>.Success(_mapper.Map<List<CategoryDto>>(categories), 200);
         }
 
-        public async Task<Response<CategoryDto>> Create(CategoryCreateDto categoryCreateDto)
+        public async Task<Response<CategoryDto>> CreateAsync(CategoryCreateDto categoryCreateDto)
         {
             var newCategory = _mapper.Map<Category>(categoryCreateDto);
             await _categoryCollection.InsertOneAsync(newCategory);
@@ -34,7 +34,7 @@ namespace FreeCourses.Service.Catalog.Service
            
         }
 
-        public async Task<Response<CategoryDto>> GetById(string id)
+        public async Task<Response<CategoryDto>> GetByIdAsync(string id)
         {
           var category =   await _categoryCollection.Find<Category>(x => x.Id == id).FirstOrDefaultAsync();
             if (category == null) return Response<CategoryDto>.Fail("This Category can not find", 404);

@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SellingCourse.IdentityServer.Services;
 
 namespace SellingCourse.IdentityServer
 {
@@ -56,6 +57,7 @@ namespace SellingCourse.IdentityServer
                 .AddAspNetIdentity<ApplicationUser>();
 
             // not recommended for production - you need to store your key material somewhere secure
+            builder.AddResourceOwnerValidator < IdentityResourceOwnerPasswordValidator>();
             builder.AddDeveloperSigningCredential();
             services.AddAuthentication()
                 .AddGoogle(options =>

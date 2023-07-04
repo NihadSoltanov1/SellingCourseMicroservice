@@ -1,2 +1,4 @@
 Services
  - Catalog => 5011
+ - PhotoStock => 5009
+IdentityServer => 5001

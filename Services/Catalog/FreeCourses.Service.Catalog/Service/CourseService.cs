@@ -42,7 +42,7 @@ namespace FreeCourses.Service.Catalog.Service
         public async Task<Response<List<CourseDto>>> GetByUserIdAsync(string userid)
         {
             var courses = await _courseCollection.Find<Course>(x => x.UserId == userid).ToListAsync();
-            if (courses.Any()) foreach(var course in courses) course.Category = await _categoryCollection.Find<Category>(x => x.Id ==course.CategoryId).FirstAsync();
+            if (courses.Any()) { foreach (var course in courses) course.Category = await _categoryCollection.Find<Category>(x => x.Id == course.CategoryId).FirstAsync(); }
             else courses = new List<Course>();
             return Response<CourseDto>.Success(_mapper.Map<List<CourseDto>>(courses), 200);
         }
@@ -53,19 +53,19 @@ namespace FreeCourses.Service.Catalog.Service
              await _courseCollection.InsertOneAsync(newCourse);
             return Response<CourseDto>.Success(_mapper.Map<CourseDto>(newCourse), 200);
         } 
-        public async Task<Response<NoContent>> UpdateAsync(CourseUpdateDto courseUpdateDto)
+        public async Task<Response<Shared.Dtos.NoContent>> UpdateAsync(CourseUpdateDto courseUpdateDto)
         {
             var updateCourse = _mapper.Map<Course>(courseUpdateDto);
             _courseCollection.FindOneAndReplace(x => x.Id == courseUpdateDto.Id, updateCourse);
-            if (updateCourse == null) return Response<NoContent>.Fail("This Course can not updated",404);
-            return Response<NoContent>.Success(204);
+            if (updateCourse == null) return Response<Shared.Dtos.NoContent>.Fail("This Course can not updated",404);
+            return Response<Shared.Dtos.NoContent>.Success(204);
         }
 
-        public async Task<Response<NoContent>> DeleteAsync(string id)
+        public async Task<Response<Shared.Dtos.NoContent>> DeleteAsync(string id)
         {
             var result = await _courseCollection.DeleteOneAsync(x => x.Id == id);
-            if (result.DeletedCount > 0) return Response<NoContent>.Success(204);
-            return Response<NoContent>.Fail("This course can not deleted",404);
+            if (result.DeletedCount > 0) return Response<Shared.Dtos.NoContent>.Success(204);
+            return Response<Shared.Dtos.NoContent>.Fail("This course can not deleted",404);
         }
     }
 

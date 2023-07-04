@@ -1,5 +1,9 @@
 using FreeCourses.Service.Catalog.Service;
 using FreeCourses.Service.Catalog.Settings;
+
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+ 
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,16 +13,24 @@ var configuration = new ConfigurationBuilder()
     .SetBasePath(builder.Environment.ContentRootPath)
     .AddJsonFile("appsettings.json")
     .Build();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    options.Authority = configuration["IdentityServerURL"];
+    options.Audience = "resource_catalog";
+    options.RequireHttpsMetadata = true;
+});
 
-// Configure the DatabaseSettings using the configuration
+     
 builder.Services.Configure<DatabaseSettings>(configuration.GetSection("DatabaseSettings"));
 builder.Services.AddSingleton<ICourseService, CourseService>();
 builder.Services.AddSingleton<ICategoryService, CategoryService>();
-builder.Services.AddControllers();
-builder.Services.Configure <DatabaseSettings> (configuration.GetSection("DataseSettings"));
+builder.Services.AddControllers(opts =>
+{
+    opts.Filters.Add(new AuthorizeFilter());
+});
 builder.Services.AddSingleton<IDatabaseSettings>(sp =>
 {
-    return sp.GetRequiredService<IOptions<DatabaseSettings>>().Value;
+    return sp.GetRequiredService<IOptions<DatabaseSettings>>().Value;         
 });
 builder.Services.AddAutoMapper(typeof(Program));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -33,7 +45,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

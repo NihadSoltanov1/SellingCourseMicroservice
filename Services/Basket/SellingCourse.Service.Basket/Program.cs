@@ -1,3 +1,4 @@
+using FreeCourses.Shared.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using SellingCourse.Service.Basket.Services;
@@ -12,6 +13,9 @@ var configuration = new ConfigurationBuilder()
     .Build();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ISharedIdentityService, SharedIdentityService>();
+builder.Services.AddScoped<IBasketService, BasketService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.Configure<RedisSettings>(configuration.GetSection("RedisSettings"));

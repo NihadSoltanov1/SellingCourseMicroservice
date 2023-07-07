@@ -2,4 +2,5 @@ Services
  - Catalog => 5011
  - PhotoStock => 5009
  - Basket => 5240
+ - Discount => 5112
 IdentityServer => 5001

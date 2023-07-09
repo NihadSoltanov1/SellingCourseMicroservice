@@ -14,6 +14,7 @@ namespace SellingCourse.IdentityServer
         public static IEnumerable<ApiResource> ApiResources => new ApiResource[]
         {
             new ApiResource("resource_catalog"){Scopes=new[] {"catalog_fullpermission"}},
+            new ApiResource("resource_discount"){Scopes={"discount_fullpermission"}},
             new ApiResource("resource_photo_stock"){Scopes=new[]{"photo_stock_fullpermission"}},
             new ApiResource("resource_basket"){Scopes=new[]{"basket_fullpermission"}},
             new ApiResource(IdentityServerConstants.LocalApi.ScopeName)
@@ -37,6 +38,7 @@ namespace SellingCourse.IdentityServer
                new ApiScope("catalog_fullpermission","Catalog Api'sine tam giris"),
                new ApiScope("photo_stock_fullpermission","Photo Stock Api'sine tam giris"),
                new ApiScope("basket_fullpermission","Basket Api'sine tam giris"),
+               new ApiScope("discount_fullpermission","Discount API için full erişim"),
                new ApiScope(IdentityServerConstants.LocalApi.ScopeName)
             };
 
@@ -65,7 +67,7 @@ namespace SellingCourse.IdentityServer
                             new Secret("secret".Sha256())
                         },
                         AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
-                        AllowedScopes = { "basket_fullpermission", IdentityServerConstants.StandardScopes.Email,IdentityServerConstants.StandardScopes.OpenId,IdentityServerConstants.StandardScopes.Profile,IdentityServerConstants.StandardScopes.OfflineAccess, IdentityServerConstants.LocalApi.ScopeName, "roles" },
+                       AllowedScopes={ "basket_fullpermission","discount_fullpermission",  IdentityServerConstants.StandardScopes.Email, IdentityServerConstants.StandardScopes.OpenId,IdentityServerConstants.StandardScopes.Profile, IdentityServerConstants.StandardScopes.OfflineAccess, IdentityServerConstants.LocalApi.ScopeName,"roles" },
                         AccessTokenLifetime=1*60*60,
                         RefreshTokenExpiration=TokenExpiration.Absolute,
                         AbsoluteRefreshTokenLifetime=(int)(DateTime.Now.AddDays(60)-DateTime.Now).TotalSeconds,
